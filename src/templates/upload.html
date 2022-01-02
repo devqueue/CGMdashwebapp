@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    upload
+{% endblock %}
+
+
+
+{% block main %}
+<script>
+    //selecting all required elements
+$(document).ready(function(){
+    const dropArea = document.querySelector(".drag-area"),
+    dragText = dropArea.querySelector("header"),
+    button = dropArea.querySelector(".button-br"),
+    input = dropArea.querySelector("input");
+    filenamearea = dropArea.querySelector("#file-upload")
+    let file; //this is a global variable and we'll use it inside multiple functions
+
+    button.onclick = ()=>{
+    input.click(); //if user click on the button then the input also clicked
+    }
+
+    function showFile(){
+        filenamearea.textContent = file.name
+
+    }
+
+    input.addEventListener("change", function(){
+    //getting user select file and [0] this means if user select multiple files then we'll select only the first one
+        file = this.files[0];
+        dropArea.classList.add("active");
+        showFile()
+    });
+
+
+    //If user Drag File Over DropArea
+    dropArea.addEventListener("dragover", (event)=>{
+    event.preventDefault(); //preventing from default behaviour
+    dropArea.classList.add("active");
+    dragText.textContent = "Release to Upload File";
+    });
+
+    //If user leave dragged File from DropArea
+    dropArea.addEventListener("dragleave", ()=>{
+    dropArea.classList.remove("active");
+    dragText.textContent = "Drag & Drop to Upload File";
+    });
+
+    //If user drop File on DropArea
+    dropArea.addEventListener("drop", (event)=>{
+    event.preventDefault(); //preventing from default behaviour
+    dragText.textContent = "Click Upload to Upload File"
+    //getting user select file and [0] this means if user select multiple files then we'll select only the first one
+    file = event.dataTransfer.files[0];
+    showFile(); //calling function
+    input.files = event.dataTransfer.files;
+    });
+})
+
+</script>
+
+<div>
+    <h1 style="text-align: center;">Upload files</h1>
+    <br>
+    <form action = "/upload" method = "POST" enctype = "multipart/form-data">
+        <div class="outerupload">
+            <div class="uploadbody">
+              <div class="drag-area"> 
+                    <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <header>Drag & Drop to Upload File</header>
+                    <span>OR</span>
+                    <div class="button-br">
+                        <input type ="file" name ="file" id="inputfile" hidden class="custom-file-input"/>
+                        Browse File
+                    </div>
+                    <br>
+                    <div id="file-upload" style="color: white;"></div>
+                    <br>
+                    <button type = "submit" class="btn btn-success">Upload</button>
+                </div>
+        </div>
+    </form>
+</div>
+<br>
+<ul class="list-group" style="margin: 0 auto; width: 68%; ">
+    {% for file in filesdir %}
+    <li class="list-group-item" style="background: #edf4f8;">{{ file }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
