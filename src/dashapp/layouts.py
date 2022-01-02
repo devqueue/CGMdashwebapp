@@ -64,9 +64,10 @@ def page_layout(title, metric, id_suffix, df):
         html.Br(),
         html.Br(),
         html.Div(children=[
-            dcc.Graph(id=f'{metric}-bar', figure={},  style={'display': 'inline-block'}),
-            dcc.Graph(id=f"{metric}-pie-chart", style={'display': 'inline-block'} ),
-            ]),
+            dcc.Graph(id=f"{metric}-pie-chart", style={'textAlign': 'center'} ),
+            dcc.Graph(id=f'{metric}-bar', figure={},  style={ 'textAlign': 'center'}),
+
+            ],style={ "display": "flex", "align-items": "center"}),
 
         html.Div([
             html.Div([
@@ -127,81 +128,10 @@ def page_layout(title, metric, id_suffix, df):
         
         html.Br(),
         html.Br(),
-    ])
+    ],style={"height": "100vh","overflow-y": "scroll","margin-bottom": "50px"})
 
     return layout
 
-def page_layout_v2(title, metric, id_suffix, df):
-
-    layout = html.Div([
-        html.H1(title, style={"textAlign": "center"}),
-
-        html.Br(),
-        dcc.Graph(id=f'{metric}-bar', figure={}),
-        html.H4("Total", style={"textAlign": "center"}),
-        dcc.Graph(id=f"{metric}-pie-chart"),
-        html.Br(),
-        html.Div([
-            html.Div([
-                html.Pre(children="Month", style={"fontSize": "100%"}),
-                dcc.Dropdown(
-                    id=f'month-dropdown-{id_suffix}', value='All Months', clearable=False,
-                    persistence=True, persistence_type='session',
-                    options=[{'label': x, 'value': x} for x in df.columns] +
-                    [{'label': 'Between', 'value': 'between'}]
-
-                )
-            ], className='six columns', style={"margin-left": "15px"}),
-
-            html.Br(),
-            html.Br(),
-
-            html.Div(children=[
-                        html.Div([
-                            html.Pre(children="\nStart Month",
-                                    style={"fontSize": "100%"}),
-                            dcc.Dropdown(
-                                id=f'start-month-dropdown-{id_suffix}', clearable=False,
-                                persistence=True, persistence_type='session',
-                                options=[{'label': x, 'value': x}
-                                        for x in df.columns]
-                            )
-                        ], className='col s12 m6', style={"margin-left": "15px"}),
-
-                        html.Div([
-                            html.Pre(children="\nEnd month",
-                                    style={"fontSize": "100%"}),
-                            dcc.Dropdown(
-                                id=f'end-month-dropdown-{id_suffix}', clearable=False,
-                                persistence=True, persistence_type='session',
-                                options=[{'label': x, 'value': x}
-                                        for x in df.columns]
-                            )
-                        ], className='col s12 m6', style={"margin-left": "15px"}),
-
-            ], className='row', style={'display': 'flex'}),
-
-            html.Div(children=[
-                        html.Pre(children="\nStatistics",
-                                 style={"fontSize": "100%"}),
-                        dcc.Dropdown(id=f'stats-{id_suffix}',
-                                    options=[],
-                                    multi=True,
-                                    searchable=True,  # allow user-searching of dropdown values
-                                    search_value='',  # remembers the value searched in dropdown
-                                    placeholder='Select...', # gray, default text shown when no option is selected
-                                    clearable=True,
-                        )
-                        
-            ], className='six columns', style={"margin-left": "15px"})
-
-        ], className='row'),
-
-        html.Br(),
-        # dcc.Graph(id=f'{metric}-bar', figure={}),
-    ])
-
-    return layout
 
 
 def populate_options(df_metric, month, start_month, end_month):
@@ -226,7 +156,7 @@ def generate_pie(df_metric):
                             'x': 0.5, 'xanchor': 'center',
                             'yanchor': 'top'}, 
                             autosize=False,
-                        width=600,
+                        width=500,
                         height=600,
                         )
                 
@@ -280,7 +210,7 @@ def display_graph(df_metric, month, start_month, end_month, stats):
                             'yanchor': 'top'}, 
                             autosize=False,
                             # margin=dict(l=20, r=20, t=20, b=20),
-                        width=900,
+                        width=1000,
                         height=600,
                         )
 

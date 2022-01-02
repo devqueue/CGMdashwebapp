@@ -160,24 +160,24 @@ def upload():
 
 @flask_app.route("/oncomine")
 def oncomine_fn():
-    return render_template("oncomine.html")
+    return render_template("embedd.html", location="/dashboard/oncomine")
 
 @flask_app.route("/prenatal")
 def prenatal_fn():
-    return render_template("oncomine.html")
+    return render_template("embedd.html", location='/dashboard/prenatal')
 
 @flask_app.route("/familial")
 def familial_fn():
-    return render_template("oncomine.html")
+    return render_template("embedd.html", location='/dashboard/familial')
 
 @flask_app.route("/targeted")
 def targeted_fn():
-    return render_template("oncomine.html")
+    return render_template("embedd.html", location='/dashboard/targeted')
 
 @flask_app.route("/exome")
 def exome_fn():
-    return render_template("oncomine.html")
+    return render_template("embedd.html", location='/dashboard/exome')
 
 @flask_app.route("/flashexome")
 def flashexome_fn():
-    return render_template("oncomine.html")
+    return render_template("embedd.html", location='/dashboard/flashexome')

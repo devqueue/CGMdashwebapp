@@ -7,7 +7,7 @@ import dash_bootstrap_components as dbc
 
 def create_rapidexome(server):
     app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], server=server,
-                suppress_callback_exceptions=True, url_base_pathname='/dashboard/rapidexome/',
+                suppress_callback_exceptions=True, url_base_pathname='/dashboard/flashexome/',
                 meta_tags=[{'name': 'viewport',
                             'content': 'width=device-width, initial-scale=1.0'}])
 
