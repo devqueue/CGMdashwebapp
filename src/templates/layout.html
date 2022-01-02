@@ -18,11 +18,11 @@
 	  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
 	<script>
-		$(document).ready(function(){
-			$(".hamburger").click(function(){
-			   $(".wrapper").toggleClass("collapse");
-			});
-		});
+		// $(document).ready(function(){
+		// 	$(".hamburger").click(function(){
+		// 	   $(".wrapper").toggleClass("collapse");
+		// 	});
+		// });
 
 		$(document).ready(function(){
             $('.bar-tgl').click(function() {
@@ -112,12 +112,12 @@
             </header>
         {% endif %}
         {% endwith %}
-
-        <main class="container">
-            {% block main %}{% endblock %}
-        </main>
-
         </div>
+        <div class="container">
+            {% block main %}{% endblock %}
+        </div>
+
+        
 </div>
 </body>
 </html>

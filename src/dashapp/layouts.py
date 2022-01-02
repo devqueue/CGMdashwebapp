@@ -64,10 +64,15 @@ def page_layout(title, metric, id_suffix, df):
         html.Br(),
         html.Br(),
         html.Div(children=[
-            dcc.Graph(id=f"{metric}-pie-chart", style={'textAlign': 'center'} ),
-            dcc.Graph(id=f'{metric}-bar', figure={},  style={ 'textAlign': 'center'}),
+            html.Div(children=[
+                dcc.Graph(id=f"{metric}-pie-chart"),
+            ],className="d-flex justify-content-center"),
 
-            ],style={ "display": "flex", "align-items": "center"}),
+            html.Div(children=[
+                dcc.Graph(id=f'{metric}-bar', figure={}),
+            ],className="d-flex justify-content-center")
+
+            ]),
 
         html.Div([
             html.Div([

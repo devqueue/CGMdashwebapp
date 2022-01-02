@@ -9,8 +9,14 @@
 {% block main %}
 
 <div class='parent'>
-    <iframe class="piframe" src={{ location }}></iframe>
+    <iframe scrolling="no" class="piframe" src={{ location }}></iframe>
 </div>
-
+<script>
+    $(document).ready(function(){
+        $(".hamburger").click(function(){
+			   $(".container").toggleClass("collapsed");
+			});
+    });
+</script>
 
 {% endblock %}
