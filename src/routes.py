@@ -7,12 +7,14 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from . import helpers 
 from flask import current_app as flask_app
+import pathlib
 
 login_required = helpers.login_required
 allowed_file = helpers.allowed_file
 
 # Path and files
-UPLOAD_FOLDER = './data/'
+PATH = pathlib.Path(__file__).parent
+UPLOAD_FOLDER = PATH.joinpath("../data").resolve()
 ALLOWED_EXTENSIONS = {'xlsx', 'xls'}
 
 # Ensure templates are auto-reloaded

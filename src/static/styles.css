@@ -77,26 +77,6 @@ html, body {
     *display: inline;
 }
 
-/* .wrapper .top_navbar .top_menu ul li a {
-    display: block;
-    margin: 0 10px;
-    width: 35px;
-    height: 35px;
-    line-height: 35px;
-    text-align: center;
-    border: 1px solid #2e4ead;
-    border-radius: 50%;
-    color: #2e4ead;
-} */
-
-/* .wrapper .top_navbar .top_menu ul li a:hover {
-    background: #4360b5;
-    color: #fff;
-}
-
-.wrapper .top_navbar .top_menu ul li a:hover i {
-    color: #fff;
-} */
 
 .wrapper .sidebar {
     position: fixed;
@@ -298,3 +278,8 @@ html, body {
 
 }
 
+.centerall{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
