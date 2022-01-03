@@ -1,0 +1,17 @@
+# Update <REGISTRY> <NAMESPACE> <IMAGE> values before use
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: flask
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+      - name: flask
+        image: <REGISTRY>/<NAMESPACE>/<IMAGE>:latest
+        ports:
+        - containerPort: 5000
