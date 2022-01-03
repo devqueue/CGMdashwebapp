@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 from . import helpers 
 from flask import current_app as flask_app
 import pathlib
+import sqlite3
 
 login_required = helpers.login_required
 allowed_file = helpers.allowed_file
@@ -38,8 +39,20 @@ flask_app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 Session(flask_app)
 
 # Configure CS50 Library to use SQLite database
-db = sql.SQL("sqlite:///users.db")
-
+try:
+    db = sql.SQL("sqlite:///users.db")
+except RuntimeError:
+    con = sqlite3.connect('users.db')
+    cur = con.cursor()
+    username = "admin"
+    passwd = generate_password_hash(username)
+    # Create table
+    cur.execute('''CREATE TABLE if not exists users
+                (id integer primary key, usename text, pass text)''')
+    # cur.execute("INSERT INTO users VALUES(?, ?)", (username, passwd))
+    # Save the changes
+    con.commit()
+    con.close()
 
 # Routes
 @flask_app.route("/login", methods=["GET", "POST"])
