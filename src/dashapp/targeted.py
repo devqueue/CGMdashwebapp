@@ -12,7 +12,7 @@ def create_targeted(server):
                             'content': 'width=device-width, initial-scale=1.0'}])
     # get relative data folder
     PATH = pathlib.Path(__file__).parent
-    DATA_PATH = PATH.joinpath("../data").resolve()
+    DATA_PATH = PATH.joinpath("../../data").resolve()
     df = dataprocessor.clean_df(DATA_PATH)
 
     app.layout = layouts.page_layout(
