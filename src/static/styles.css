@@ -250,11 +250,6 @@ html, body {
 
 
 /* iframes */
-/* .container{
-    box-sizing: border-box;
-} */
-
-
 
 .parent {
     box-sizing: content-box;
