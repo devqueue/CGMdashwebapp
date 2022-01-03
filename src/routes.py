@@ -48,7 +48,7 @@ except RuntimeError:
     passwd = generate_password_hash(username)
     # Create table
     cur.execute('''CREATE TABLE if not exists users
-                (id integer primary key, usename text, pass text)''')
+                (id integer primary key, username text, hash text)''')
     # cur.execute("INSERT INTO users VALUES(?, ?)", (username, passwd))
     # Save the changes
     con.commit()
@@ -74,7 +74,10 @@ def login():
             return render_template("login.html")
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+        try:
+            rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+        except RuntimeError:
+            flash("Username or Password in")
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
