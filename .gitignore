@@ -1,7 +1,5 @@
-archive/
-finance/
 __pycache__/
 data/
-req.txt
 users.db
 test.html
+.vscode/
