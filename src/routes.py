@@ -53,6 +53,7 @@ except RuntimeError:
     # Save the changes
     con.commit()
     con.close()
+    db = sql.SQL("sqlite:///users.db")
 
 # Routes
 @flask_app.route("/login", methods=["GET", "POST"])
