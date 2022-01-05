@@ -20,8 +20,10 @@ def get_data_path():
 
 
 def rearranage_files(location):
-
-    filenames = os.listdir(location)
+    try:
+        filenames = os.listdir(location)
+    except os.error:
+        return []
 
     def rearrange(seq, order, keyfunc):
         if not isinstance(order, abc.Mapping):

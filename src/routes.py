@@ -9,13 +9,14 @@ from . import helpers
 from flask import current_app as flask_app
 import pathlib
 import sqlite3
+from .dashapp import dataprocessor
 
 login_required = helpers.login_required
 allowed_file = helpers.allowed_file
 
 # Path and files
 PATH = pathlib.Path(__file__).parent
-UPLOAD_FOLDER = PATH.joinpath("../data").resolve()
+UPLOAD_FOLDER = dataprocessor.get_data_path()
 ALLOWED_EXTENSIONS = {'xlsx', 'xls'}
 
 # Ensure templates are auto-reloaded
@@ -152,7 +153,11 @@ def index():
 @flask_app.route("/upload", methods=['GET', 'POST'])
 @login_required
 def upload():
-    filesdir = os.listdir(UPLOAD_FOLDER)
+    try:
+        filesdir = os.listdir(UPLOAD_FOLDER)
+    except os.error as e:
+        print(e)
+        filesdir = ''
     if request.method == "POST":
         if 'file' not in request.files:
             flash('No file part', "danger")
