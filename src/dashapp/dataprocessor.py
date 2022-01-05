@@ -1,6 +1,22 @@
 import collections.abc as abc
 import pandas as pd
+import pathlib
 import os
+import json
+
+
+def get_data_path():
+    JSON_FILE = pathlib.Path(__file__).parent.parent.parent / 'appconfig.json'
+
+    with open(JSON_FILE, "r") as stream:
+        try:
+            jsonfile = json.load(stream)
+            PATH = jsonfile["DATA_PATH"]
+            return PATH
+        except json.decoder.JSONDecodeError as exec:
+            print(exec)
+            return False
+
 
 
 def rearranage_files(location):
