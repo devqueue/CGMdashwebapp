@@ -12,9 +12,8 @@ def create_rapidexome(server):
                             'content': 'width=device-width, initial-scale=1.0'}])
 
 
-    # get relative data folder
-    PATH = pathlib.Path(__file__).parent
-    DATA_PATH = PATH.joinpath("../../data").resolve()
+    # get path to data folder
+    DATA_PATH = dataprocessor.get_data_path()
     df = dataprocessor.clean_df(DATA_PATH)
 
 

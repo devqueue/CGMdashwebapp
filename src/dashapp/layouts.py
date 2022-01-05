@@ -4,56 +4,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from . import dataprocessor
 
-def sidebar():
-    # styling the sidebar
-    SIDEBAR_STYLE = {
-        "position": "fixed",
-        "top": 0,
-        "left": 0,
-        "bottom": 0,
-        "width": "17rem",
-        "padding": "2rem 1rem",
-        "background-color": "#f8f9fa",
-    }
-
-    # padding for the page content
-    CONTENT_STYLE = {
-        "margin-left": "18rem",
-        "margin-right": "2rem",
-        "padding": "2rem 1rem",
-    }
-
-
-    sidebar = html.Div(
-        [
-            html.H2("CGM Statistics Dashboard", className="display-7"),
-            html.Hr(),
-            dbc.Nav(
-                [
-                    dbc.NavLink("Oncomine Comprehensive",href="/apps/oncomine", active="exact"),
-                    dbc.NavLink("Prenatal Targeted", href="/apps/prenatal", active="exact"),
-                    dbc.NavLink("Familial Segregation", href="/apps/familial", active="exact"),
-                    dbc.NavLink("Targeted Mutation", href="/apps/targeted", active="exact"),
-                    dbc.NavLink("Exome Sequencing", href="/apps/exome", active="exact"),
-                    dbc.NavLink("Flash Exome Sequencing", href="/apps/rapidexome", active="exact"),
-                    dbc.NavLink("Uploaded Data", href="/", active="exact")
-                ],
-                vertical=True,
-                pills=True,
-            ),
-        ],
-        style=SIDEBAR_STYLE,
-    )
-
-    content = html.Div(id="page-content", children=[], style=CONTENT_STYLE)
-
-    layout = html.Div([
-        dcc.Location(id="url"),
-        sidebar,
-        content
-    ])
-
-    return layout
 
 
 def page_layout(title, metric, id_suffix, df):
