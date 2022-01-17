@@ -1,9 +1,6 @@
 import collections.abc as abc
 import pandas as pd
-import pathlib
 import os
-import json
-
 
 def get_data_path(param):
     value = os.environ.get(param)
