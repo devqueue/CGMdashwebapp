@@ -14,7 +14,7 @@ def create_familial(server):
 
 
     # get path to data folder
-    DATA_PATH = dataprocessor.get_data_path()
+    DATA_PATH = dataprocessor.get_data_path("DATA_PATH")
     df = dataprocessor.clean_df(DATA_PATH)
 
     app.layout = layouts.page_layout(

@@ -5,13 +5,13 @@ import os
 import json
 
 
-def get_data_path():
+def get_data_path(param):
     JSON_FILE = pathlib.Path(__file__).parent.parent.parent / 'appconfig.json'
 
     with open(JSON_FILE, "r") as stream:
         try:
             jsonfile = json.load(stream)
-            PATH = jsonfile["DATA_PATH"]
+            PATH = jsonfile[param]
             return PATH
         except json.decoder.JSONDecodeError as exec:
             print(exec)
