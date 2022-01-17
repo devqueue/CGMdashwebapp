@@ -20,3 +20,15 @@ The `DATABASE_URI` must be specified using the standard convention
 ```
 [DB_TYPE]+[DB_CONNECTOR]://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DB_NAME]
 ```
+
+## Deploying using mod_wsgi (Apache)
+1. Install the mod_wsgi:
+    ```
+    apt-get install libapache2-mod-wsgi-py3
+    ```
+2. Edit `app.wsgi`:
+    - Change the path for the vitual environment under `activate_this`
+    - Make sure it's a python file
+3. Edit `flaskapp.config`:
+    - Change the port, hostIP or domain, path, etc...
+4. Make sure to create a `logs` directory inside the main app directory
