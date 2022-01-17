@@ -2,12 +2,12 @@
 A Dashboard application built using flask and plotly-dash.
 
 ## Configuring the data path:
-Use the `appconfig.json` to add an absolute path to the directory of files. The app expects a directory and not a file. The directory must contain excel files only. either ending with `.xlsx` or `.xls`.
+Use the `.env` to add an absolute path to the directory of files or you may export the path an environment variable `DATA_PATH` The app expects a directory and not a file. The directory must contain excel files only. either ending with `.xlsx` or `.xls`.
 The `get_data_path()` function in `dataprocessor.py` is responsible for returning the folder path to each endpoint.
-You may edit this function if required, but make sure it returns an absolute path to a folder containing excel files.
+It returns the value of environment variable `DATA_PATH`.
 
 ## Format for the data:
-The app also expects the excel file to follow a certain format. The details of which have been mentioned below. Any deviation from this norm will cause a `runtimeError`
+The app also expects the excel file to follow a certain format. The details of which have been mentioned below. Any deviation from this standard will cause a `runtimeError`
 - The summary data must be in the first 2 columns.
 - second column name must contain count (case insensitive)
 - File name should be id_CGM_month_year.xlsx
@@ -15,8 +15,8 @@ The app also expects the excel file to follow a certain format. The details of w
 - count must include month name
 
 ## Authentication for uploading files.
-The app uses an `sqlite` database which contains a table with the following schema
+The app can connect to any local or remote database given that you specify the URI as an environment variable.
+The `DATABASE_URI` must be specified using the standard convention 
 ```
-CREATE TABLE users(id integer primary key ,username text unique, hash text);
+[DB_TYPE]+[DB_CONNECTOR]://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DB_NAME]
 ```
-By default the repository does not contain a database file, it creates the database at runtime and adds users as they are registered from the `/register` route. but you may create one named `users.db` with the above schema and add users to it. but remember anyone can add a new user from the register route. You may choose to secure it by added `@login_required` decorator to the function, or you may disable it all together by removing the function entirely.
