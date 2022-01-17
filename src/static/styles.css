@@ -278,3 +278,10 @@ html, body {
     align-items: center;
     justify-content: center;
 }
+
+.formError {
+    list-style-type: none;
+    padding: 0px;
+    color: red;
+}
+
