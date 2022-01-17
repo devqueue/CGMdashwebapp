@@ -1,27 +1,24 @@
-import os
-from . import sql
-from flask import Flask, redirect, render_template, request, session, url_for, flash
-from flask_session import Session
-from tempfile import mkdtemp
-from werkzeug.security import check_password_hash, generate_password_hash
-from werkzeug.utils import secure_filename
-from . import helpers 
+from flask import redirect, render_template, request, url_for, flash
+from flask_login import LoginManager, login_user, current_user, logout_user
 from flask import current_app as flask_app
-import pathlib
-import sqlite3
+from flask_session import Session
+from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
+from functools import wraps 
 from .dashapp import dataprocessor
+from .wtforms import LoginForm, RegistrationForm
+from .models import User, db
+import pathlib
+import os
 
-login_required = helpers.login_required
-allowed_file = helpers.allowed_file
 
 # Path and files
-PATH = pathlib.Path(__file__).parent
-UPLOAD_FOLDER = dataprocessor.get_data_path()
+UPLOAD_FOLDER = dataprocessor.get_data_path("DATA_PATH")
 ALLOWED_EXTENSIONS = {'xlsx', 'xls'}
 
 # Ensure templates are auto-reloaded
 flask_app.config["TEMPLATES_AUTO_RELOAD"] = True
-
+Session(flask_app)
 
 # Ensure responses aren't cached
 @flask_app.after_request
@@ -32,76 +29,51 @@ def after_request(response):
     return response
 
 
-# Configure session to use filesystem (instead of signed cookies)
-flask_app.config["SESSION_FILE_DIR"] = mkdtemp()
-flask_app.config["SESSION_PERMANENT"] = False
-flask_app.config["SESSION_TYPE"] = "filesystem"
-flask_app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-Session(flask_app)
+# Initialize login manager
+login = LoginManager(flask_app)
+login.init_app(flask_app)
 
-# Configure CS50 Library to use SQLite database
-try:
-    db = sql.SQL("sqlite:///users.db")
-except RuntimeError:
-    con = sqlite3.connect('users.db')
-    cur = con.cursor()
-    username = "admin"
-    passwd = generate_password_hash(username)
-    # Create table
-    cur.execute('''CREATE TABLE if not exists users
-                (id integer primary key, username text, hash text)''')
-    # cur.execute("INSERT INTO users VALUES(?, ?)", (username, passwd))
-    # Save the changes
-    con.commit()
-    con.close()
-    db = sql.SQL("sqlite:///users.db")
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+# check allowed files
+def allowed_file(filename, ALLOWED_EXTENSIONS):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # Routes
 @flask_app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
-
-    # Forget any user_id
-    session.clear()
-
-    # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
-        # Ensure username was submitted
-        if not request.form.get("username"):
-            flash("must provide username", "warning")
-            return render_template("login.html")
-        elif not request.form.get("password"):
-            flash("must provide password", "warning")
-            return render_template("login.html")
-
-        # Query database for username
-        try:
-            rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
-        except RuntimeError:
-            flash("Username or Password in")
-
-        # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            flash("invalid username and/or password", "danger")
-            return render_template("login.html")
-
-        # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
-
-        # Redirect user to home page
-        return redirect("/upload")
+    login_form = LoginForm()
+        
+    # Allow login if validation success
+    if login_form.validate_on_submit():
+        user_object = User.query.filter_by(
+            username=login_form.username.data).first()
+        login_user(user_object)
+        return redirect(url_for('upload'))
 
     # User reached route via GET
-    else:
-        return render_template("login.html")
+    return render_template("login.html", form=login_form)
 
 
 @flask_app.route("/logout")
 def logout():
     """Log user out"""
 
-    # Forget any user_id
-    session.clear()
+    # logout user
+    logout_user()
 
     # Redirect user to login form
     return redirect("/")
@@ -109,41 +81,25 @@ def logout():
 
 @flask_app.route("/register", methods=["GET", "POST"])
 def register():
-    """Register user"""
-    if request.method == "POST":
-        username = request.form.get('username')
-        password = request.form.get('password')
-        confirmation = request.form.get('confirmation')
+    reg_form = RegistrationForm()
 
-        try:
-            db.execute("CREATE TABLE if not exists users(id integer primary key ,username text unique, hash text)")
-        except:
-            flash('Internal server error occured.', "warning")
-            return render_template("register.html")
+    # Update database if validation success
+    if reg_form.validate_on_submit():
+        username = reg_form.username.data
+        password = reg_form.password.data
 
-        if not username:
-            flash('Username is required.', "warning")
-            return render_template("register.html") 
-        elif not password:
-            flash('Password is required', "warning")
-            return render_template("register.html") 
-        elif not confirmation:
-            flash('Password is required', "warning")
-            return render_template("register.html")
-        elif password != confirmation:
-            flash('Passwords do not match', "danger")
-            return render_template("register.html") 
+        # Hash password
+        hashed_pswd = generate_password_hash(password)
 
-        hash = generate_password_hash(password)
+        # Add username & hashed password to DB
+        user = User(username=username, hashed_pswd=hashed_pswd)
+        db.session.add(user)
+        db.session.commit()
 
-        try:
-            db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, hash)
-            return redirect('/login')
-        except:
-            flash('Username has already been registered.', "info")
-            return render_template("register.html")
-    else:
-        return render_template("register.html")
+        flash('Registered successfully. Please login.', 'success')
+        return redirect(url_for('login'))
+
+    return render_template("register.html", form=reg_form)
 
 @flask_app.route("/")
 def index():
