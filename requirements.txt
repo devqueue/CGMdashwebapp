@@ -49,3 +49,4 @@ WTForms==3.0.1
 flask-wtf==1.0.0
 pymysql==1.0.2
 python-dotenv==0.19.2
+gevent==21.12.0
